@@ -1,19 +1,18 @@
 defmodule ExBlake do
   @moduledoc """
-  Implementation of Blake-256, predecessor of Blake2.
+  Implementation of Blake-256, predecessor of Blake2 via NIF
   """
-  alias ExBlake.Helper.Python
+  @on_load :load_nifs
+
+  def load_nifs do
+    :erlang.load_nif('./priv/blake256', 0)
+  end
+
+  def hash_nif(msg)
+  def hash_nif(_msg), do: exit(:nif_library_not_found)
 
   def hash(payload) when is_binary(payload) do
-    call_python(:blake256, :blake_hash, [payload])
-  end
-
-  defp default_instance() do
-    path = [:code.priv_dir(:ex_blake), "python"] |> Path.join()
-    Python.python_instance(to_charlist(path))
-  end
-
-  defp call_python(module, function, args) do
-    Python.call(default_instance(), module, function, args)
+    hash_nif(payload)
+    |> :binary.list_to_bin()
   end
 end

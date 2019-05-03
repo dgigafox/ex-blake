@@ -25,6 +25,6 @@ ex_blake-*.tar
 # Ignore elixir_ls builds
 /.elixir_ls/
 
-# Ignore python encoded files
-/priv/python/*.pyc
+# Ignore .so files
+/priv/
 

@@ -1,9 +1,17 @@
+defmodule Mix.Tasks.Compile.Blake256 do
+  def run(_args) do
+    {result, _errcode} = System.cmd("make", [])
+    IO.binwrite(result)
+  end
+end
+
 defmodule ExBlake.MixProject do
   use Mix.Project
 
   def project do
     [
       app: :ex_blake,
+      compilers: [:blake256] ++ Mix.compilers,
       version: "0.1.0",
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
@@ -20,8 +28,6 @@ defmodule ExBlake.MixProject do
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
-    [
-      {:erlport, "~> 0.9"}
-    ]
+    []
   end
 end
