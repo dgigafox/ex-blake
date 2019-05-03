@@ -1,6 +1,7 @@
 defmodule Mix.Tasks.Compile.Blake256 do
   def run(_args) do
-    {result, _errcode} = System.cmd("make", [])
+    File.mkdir_p("priv")
+    {result, _errcode} = System.cmd("make", ["priv/blake256.so"], stderr_to_stdout: true)
     IO.binwrite(result)
   end
 end

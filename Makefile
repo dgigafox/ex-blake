@@ -1,4 +1,5 @@
 CFLAGS = -g -O3 -Wall
+MIX = mix
 
 ERLANG_PATH = $(shell erl -eval 'io:format("~s", [lists:concat([code:root_dir(), "/erts-", erlang:system_info(version), "/include"])])' -s init stop -noshell)
 CFLAGS += -I"$(ERLANG_PATH)"
@@ -20,12 +21,16 @@ endif
 
 BLAKE256_SRC = lib/c_src/blake256.c
 
-all: create_priv priv/blake256.so
+.PHONY: all blake clean
 
-create_priv:
-	mkdir -p priv
+all: blake
+
+blake:
+	$(MIX) compile
 
 priv/blake256.so: $(BLAKE256_SRC)
 	$(CC) $(CFLAGS) -shared $(LDFLAGS) -o $@ $(BLAKE256_SRC)
 
-.PHONY: all create_priv
+clean:
+	$(MIX) clean
+	$(RM) priv/*
