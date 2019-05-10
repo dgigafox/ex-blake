@@ -2,10 +2,13 @@ defmodule ExBlake do
   @moduledoc """
   Implementation of Blake-256, predecessor of Blake2 via NIF
   """
-  @on_load :load_nifs
+  @on_load {:init, 0}
 
-  def load_nifs do
-    :erlang.load_nif('./priv/blake256', 0)
+  app = Mix.Project.config[:app]
+
+  def init do
+    path = :filename.join(:code.priv_dir(unquote(app)), 'blake256')
+    :ok = :erlang.load_nif(path, 0)
   end
 
   def hash_nif(msg)
