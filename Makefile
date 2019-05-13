@@ -5,6 +5,10 @@ ERLANG_PATH = $(shell erl -eval 'io:format("~s", [lists:concat([code:root_dir(),
 CFLAGS += -I"$(ERLANG_PATH)"
 CFLAGS += -Ic_src
 
+EBIN_DIR=ebin
+PRIV_PATH ?= priv
+TARGET=$(PRIV_PATH)/blake256.so
+
 ifneq ($(CROSSCOMPILE),)
     # crosscompiling
     CFLAGS += -fPIC
@@ -21,16 +25,17 @@ endif
 
 BLAKE256_SRC = lib/c_src/blake256.c
 
-.PHONY: all blake clean
+.PHONY: all clean
 
-all: blake
+all: nif
 
 blake:
 	$(MIX) compile
 
-priv/blake256.so: $(BLAKE256_SRC)
+nif:$(TARGET)
+
+$(TARGET): $(BLAKE256_SRC)
 	$(CC) $(CFLAGS) -shared $(LDFLAGS) -o $@ $(BLAKE256_SRC)
 
 clean:
-	$(MIX) clean
-	$(RM) priv/*
+	rm -rf $(PRIV_PATH)/*.so
