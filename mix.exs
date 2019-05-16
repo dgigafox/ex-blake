@@ -4,8 +4,8 @@ defmodule Mix.Tasks.Compile.Blake256 do
     priv_path = Path.join([cp, "..", "priv"])
     File.mkdir_p(priv_path)
     File.mkdir_p("priv")
-    if Mix.shell.cmd("PRIV_PATH=#{priv_path} make nif") != 0 do
-      raise Mix.Error, message: "could not run `make nif`."
+    if Mix.shell.cmd("PRIV_PATH=#{priv_path} make all") != 0 do
+      raise Mix.Error, message: "could not run `make all`."
     end
     File.copy(Path.join([priv_path, "blake256.so"]), "priv")
     :ok
